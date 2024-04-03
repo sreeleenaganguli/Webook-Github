@@ -1,0 +1,27 @@
+.heading{
+    color: rgb(254, 248, 251);
+    background-color: rgba(239, 69, 148, 0.684);
+    width: 100%;
+}
+
+.event{
+    color: rgb(214, 13, 114);
+}
+
+#cover{
+    border-radius: 40px;
+    width: 80%;
+    height: 30em;
+    background-color: rgb(222, 176, 176);
+    display: flex;
+    justify-content: center;
+}
+#database{
+    border-radius: 12px;
+    color: rgb(223, 8, 112);
+}
+
+body{
+    color: white !important;
+    background-color: rgb(191, 7, 102) !important;
+}

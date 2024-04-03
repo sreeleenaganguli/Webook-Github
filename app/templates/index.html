@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='index.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <title>WEBHOOK TRACKER</title>
+    <style>
+        body {
+            font-family: Verdana, sans-serif;
+        }
+        .heading {
+            font-family: "Lucida Handwriting", "Courier New", cursive;
+            text-align: center;
+        }
+        .event {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="heading">
+        <div class="container">
+            <h1>WEBHOOK TRACKER</h1>
+        </div>
+    </nav>
+    <p class="container">Welcome to the Webhook Tracker. This page updates itself after every 15 seconds to check whether
+        there has been any PUSH, PULL REQUESTS or MERGE in a particular github repo.</p>
+    <div class="container" id="cover">
+        <div class="event"><h5><b><br>EVENTS:</br></b></h5></div>
+        <div class="container" id="database"></div>
+    </div>
+    <script type="text/javascript">
+        db = document.getElementById("database")
+
+        db.innerHTML = `
+    {% for hooks in allhook %}
+    {% if hooks['action'] == 'PUSH' %}
+    <div>{{hooks['author']}} pushed to {{hooks['to_branch']}} on {{hooks['timestamp'].split('T')[0]}} at {{hooks['timestamp'].split('T')[1][0:8]}} +05:30</div>
+    {% elif hooks['action'] == "PULL REQUEST" %}
+    <div>{{hooks['author']}} pushed to {{hooks['to_branch']}} from {{hooks['from_branch']}} on {{hooks['timestamp'][0]}} at {{hooks['timestamp'][1][0:8]}} +00:00</div>
+    {% elif hooks['action'] == "MERGE" %}
+    <div>{{hooks['author']}} merged to {{hooks['to_branch']}} from {{hooks['from_branch']}} on {{hooks['timestamp'][0]}} at {{hooks['timestamp'][1][0:8]}} +00:00</div>
+    {% endif %}
+    {% endfor %}`
+            ;
+        window.onload = setupRefresh;
+        function setupRefresh() {
+            setInterval("refreshBlock();", 15000);
+        }
+
+        function refreshBlock() {
+            db = document.getElementById("database")
+
+            $('#database').load(db.innerHTML = `
+    {% for hooks in allhook %}
+    {% if hooks['action'] == 'PUSH' %}
+    <div>{{hooks['author']}} pushed to {{hooks['to_branch']}} on {{hooks['timestamp'].split('T')[0]}} at {{hooks['timestamp'].split('T')[1][0:8]}} +05:30</div>
+    {% elif hooks['action'] == "PULL REQUEST" %}
+    <div>{{hooks['author']}} pushed to {{hooks['to_branch']}} from {{hooks['from_branch']}} on {{hooks['timestamp'][0]}} at {{hooks['timestamp'][1][0:8]}} +00:00</div>
+    {% elif hooks['action'] == "MERGE" %}
+    <div>{{hooks['author']}} merged to {{hooks['to_branch']}} from {{hooks['from_branch']}} on {{hooks['timestamp'][0]}} at {{hooks['timestamp'][1][0:8]}} +00:00</div>
+    {% endif %}
+    {% endfor %}`
+            );
+        }
+    </script>
+</body>
+
+</html>
